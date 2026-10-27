@@ -594,3 +594,50 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .rm-kpi .v { font-size: 24px; }
   .rm-foot ul { flex-direction: column; }
 }
+
+/* ===== 인사이트 목록 ===== */
+.post-list { border-top: 1px solid var(--ink); }
+.post-list li { border-bottom: 1px solid var(--line); }
+.post-list a { display: grid; grid-template-columns: 150px 1fr; gap: 28px; padding: 28px 0; align-items: start; }
+.post-list a:hover h3 { color: var(--point-deep); }
+.post-list .cat { font-size: 13px; font-weight: 700; color: var(--point-deep); padding-top: 4px; }
+.post-list h3 { font-family: var(--serif); font-size: 22px; line-height: 1.4; margin-bottom: 8px; }
+.post-list p { margin: 0; color: var(--ink-2); font-size: 15.5px; max-width: 70ch; }
+.post-list .meta { font-size: 13px; color: var(--ink-3); margin-top: 10px; }
+@media (max-width: 680px) {
+  .post-list a { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+  .post-list h3 { font-size: 19px; }
+}
+
+/* ===== 본문 글 ===== */
+.post { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 64px; align-items: start; }
+.post-body { max-width: 72ch; min-width: 0; }
+.post > * { min-width: 0; }
+.post-body > * + * { margin-top: 18px; }
+.post-body h2 { font-family: var(--serif); font-size: clamp(22px, 2.4vw, 28px); line-height: 1.4; margin-top: 52px; padding-top: 22px; border-top: 1px solid var(--line); }
+.post-body h3 { font-size: 18.5px; margin-top: 32px; }
+.post-body p { color: var(--ink-2); line-height: 1.85; font-size: 16.5px; }
+.post-body strong { color: var(--ink); }
+.post-body ul, .post-body ol { padding-left: 0; list-style: none; }
+.post-body li { position: relative; padding-left: 20px; margin-top: 10px; color: var(--ink-2); line-height: 1.8; }
+.post-body ul > li::before { content: ""; position: absolute; left: 2px; top: 11px; width: 5px; height: 5px; background: var(--point); }
+.post-body ol { counter-reset: pi; }
+.post-body ol > li { padding-left: 28px; counter-increment: pi; }
+.post-body ol > li::before { content: counter(pi) "."; position: absolute; left: 0; top: 0; font-weight: 700; color: var(--point-deep); }
+.post-body .callout { background: var(--bg-2); border-left: 3px solid var(--point); padding: 20px 24px; margin-top: 28px; }
+.post-body .callout p { margin: 0; font-size: 15.5px; }
+.post-body .callout p + p { margin-top: 10px; }
+.post-body .callout strong { display: block; margin-bottom: 6px; color: var(--ink); }
+.post-body .tbl-wrap { margin-top: 26px; max-width: 100%; }
+.post-body .src { font-size: 13.5px; color: var(--ink-3); margin-top: 10px; line-height: 1.6; }
+.post-meta { font-size: 14px; color: var(--ink-3); margin-top: 20px; display: flex; gap: 14px; flex-wrap: wrap; }
+.post-aside { position: sticky; top: 96px; border-top: 2px solid var(--ink); padding-top: 18px; font-size: 14.5px; }
+.post-aside h4 { font-size: 13px; color: var(--ink-3); letter-spacing: .02em; margin-bottom: 12px; }
+.post-aside ul { list-style: none; margin: 0 0 24px; padding: 0; }
+.post-aside li { margin-bottom: 10px; line-height: 1.5; }
+.post-aside .ask { background: var(--bg-2); padding: 18px; }
+.post-aside .ask p { font-size: 14px; color: var(--ink-2); margin: 0 0 12px; line-height: 1.6; }
+@media (max-width: 980px) {
+  .post { grid-template-columns: 1fr; gap: 48px; }
+  .post-aside { position: static; }
+}

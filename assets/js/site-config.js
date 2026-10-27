@@ -11,8 +11,8 @@ window.GU_SITE = {
      상담 폼 서버가 준비되지 않았을 때는 이 주소로 메일 앱이 열립니다. */
   email: "",
 
-  /* 사업자등록번호 — 예: "000-00-00000" (사업자등록 후 입력) */
-  bizNo: "",
+  /* 사업자등록번호 */
+  bizNo: "757-86-04159",
 
   /* 상담 신청 폼이 전송되는 주소
      - 기본값 "/api/contact" 는 같이 배포되는 Cloudflare Pages Function(functions/api/contact.js)입니다.
