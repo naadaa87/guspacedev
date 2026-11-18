@@ -1,14 +1,14 @@
-import http.server, threading, socketserver, os, sys, glob
+import os, http.server, threading, socketserver, sys, glob
 from playwright.sync_api import sync_playwright
-ROOT='/home/claude/guspacedev'
-SHOT='/tmp/claude-0/-home-claude/68a847d7-c3cc-5b42-a1cc-b1c7555fa5dc/scratchpad/shots'
+ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SHOT=os.environ.get('QA_SHOTS', '/tmp/guspace-qa-shots'); os.makedirs(SHOT, exist_ok=True)
 os.chdir(ROOT)
 class Q(http.server.SimpleHTTPRequestHandler):
     def log_message(self,*a): pass
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(('127.0.0.1',8801),Q)
 threading.Thread(target=srv.serve_forever,daemon=True).start()
-pages=[f for f in sorted(glob.glob('**/*.html',recursive=True)) if not f.startswith('naver9935')]
+pages=[f for f in sorted(glob.glob('**/*.html',recursive=True)) if not f.startswith(('naver9935','admin/','node_modules/'))]
 problems=[]
 with sync_playwright() as p:
     b=p.chromium.launch()
@@ -26,7 +26,8 @@ with sync_playwright() as p:
             base=os.path.dirname(path); miss=[]
             for h in set(links):
                 t=h.split('#')[0]
-                tgt=os.path.normpath(os.path.join(base,t)) if t else path
+                tgt=(t.lstrip('/') or 'index.html') if t.startswith('/') else (os.path.normpath(os.path.join(base,t)) if t else path)
+                tgt=tgt.split('?')[0]
                 if not os.path.exists(tgt): miss.append(h)
             if broken or ov or miss: problems.append((tag,path,broken,ov,miss))
             pg.screenshot(path=f'{SHOT}/{tag}_{path.replace("/","_")}.png', full_page=True)

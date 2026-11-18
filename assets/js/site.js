@@ -20,6 +20,17 @@
   if (cfg.mapNaver) document.querySelectorAll('[data-map-naver]').forEach(function (a) { a.href = cfg.mapNaver; });
   if (cfg.mapKakao) document.querySelectorAll('[data-map-kakao]').forEach(function (a) { a.href = cfg.mapKakao; });
 
+  /* ---------- member state (로그인하면 상단 '로그인'이 '마이페이지'로 바뀝니다) ---------- */
+  var memberName = null;
+  try { memberName = JSON.parse(localStorage.getItem('gu_member') || 'null'); } catch (e) { memberName = null; }
+  if (memberName) {
+    document.querySelectorAll('[data-member-hint]').forEach(function (el) { el.hidden = true; });
+    document.querySelectorAll('[data-member-link]').forEach(function (a) {
+      a.textContent = '마이페이지';
+      a.setAttribute('href', a.getAttribute('data-mypage'));
+    });
+  }
+
   /* ---------- desktop dropdown ---------- */
   document.querySelectorAll('.nav > li.has-sub').forEach(function (li) {
     var btn = li.querySelector('button');
@@ -73,6 +84,7 @@
       else key = (w === 'lease' || w === 'opex') ? 'leasing' : (w === 'operate') ? 'ops' : 'vu';
       if (key === 'vu' && f === 'ground' && w === 'operate') key = 'ops';
       var r = R[key];
+      if (window.guTrack && check.getAttribute('data-last') !== key) { window.guTrack('check', key); check.setAttribute('data-last', key); }
       result.querySelector('.title').textContent = r.title;
       result.querySelector('.body').textContent = r.body;
       result.querySelector('.prod').textContent = '추천 상품 순서: ' + r.prod;
@@ -122,6 +134,29 @@
       window.location.href = href;
       return true;
     }
+    var started = false;
+    form.addEventListener('focusin', function () {
+      if (started) return;
+      started = true;
+      if (window.guTrack) window.guTrack('form_start', 'contact');
+    });
+    if (memberName) {
+      fetch('/api/member/me', { credentials: 'same-origin' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d || !d.member) { try { localStorage.removeItem('gu_member'); } catch (e) { /* */ } return; }
+          var m = d.member;
+          [['name', m.company ? m.name + ' / ' + m.company : m.name], ['phone', m.phone], ['email', m.email], ['location', m.location]].forEach(function (p) {
+            var el = form.querySelector('[name="' + p[0] + '"]');
+            if (el && !el.value && p[1]) el.value = p[1];
+          });
+          var who = form.querySelector('[name="who"]');
+          if (who && m.who) Array.prototype.forEach.call(who.options, function (o) { if (o.value === m.who || o.text === m.who) who.value = o.value; });
+          var note = form.querySelector('[data-member-note]');
+          if (note) { note.hidden = false; note.textContent = m.name + '님의 회원 정보로 일부 칸을 채웠습니다. 신청 내역과 진행 상황은 마이페이지에서 확인하실 수 있습니다.'; }
+        })
+        .catch(function () { /* */ });
+    }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (form.querySelector('[name="website"]').value) return; // honeypot
@@ -132,9 +167,10 @@
       var body = {};
       data.forEach(function (v, k) { if (k !== 'website') body[k] = v; });
       body.page = location.href;
-      fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) })
+      if (window.GU_IDS) { body.vid = window.GU_IDS.vid; body.sid = window.GU_IDS.sid; }
+      fetch(endpoint, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) })
         .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json ? r.json().catch(function(){return {};}) : {}; })
-        .then(function () { form.reset(); show('상담 신청이 접수되었습니다. 내용을 확인한 뒤 남겨주신 연락처로 연락드리겠습니다.'); })
+        .then(function () { form.reset(); show(memberName ? '상담 신청이 접수되었습니다. 진행 상황은 마이페이지에서 확인하실 수 있고, 남겨주신 연락처로 연락드리겠습니다.' : '상담 신청이 접수되었습니다. 내용을 확인한 뒤 남겨주신 연락처로 연락드리겠습니다.'); })
         .catch(function () {
           if (mailtoFallback(data)) { show('메일 앱이 열립니다. 내용을 확인하고 보내기를 눌러주시면 접수됩니다.'); }
           else { show('지금은 접수가 되지 않습니다. 잠시 후 다시 시도하시거나 전화로 문의해 주세요.', true); }
