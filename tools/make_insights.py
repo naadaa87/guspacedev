@@ -125,3 +125,7 @@ n = write('insights.html', '인사이트 — 건물관리·공실·임대차 실
           '건물관리, 시설관리, 공실 해결, 상가 임대차, 관리비 산정, 노후건물 개선, 건물 자산관리')
 print(f"  insights.html  {n // 1024}KB")
 print(f"\n총 {len(POSTS)}편 + 목록 1개 생성")
+
+# 링크·대표 주소·사이트맵의 .html 을 떼어 실제 열리는 주소와 맞춘다 (서치 콘솔 '리디렉션이 포함된 페이지' 방지)
+import os as _os, subprocess as _sp, sys as _sys
+_sp.run([_sys.executable, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'clean_urls.py'), _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), 'guspace.kr'], check=False)

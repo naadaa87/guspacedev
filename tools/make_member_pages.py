@@ -257,3 +257,8 @@ def build():
 
 if __name__ == '__main__':
     build()
+    
+    # 링크·대표 주소·사이트맵의 .html 을 떼어 실제 열리는 주소와 맞춘다 (서치 콘솔 '리디렉션이 포함된 페이지' 방지)
+    import os as _os, subprocess as _sp, sys as _sys
+    _sp.run([_sys.executable, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'clean_urls.py'), _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), 'guspace.kr'], check=False)
+

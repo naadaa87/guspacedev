@@ -28,7 +28,8 @@ with sync_playwright() as p:
                 t=h.split('#')[0]
                 tgt=(t.lstrip('/') or 'index.html') if t.startswith('/') else (os.path.normpath(os.path.join(base,t)) if t else path)
                 tgt=tgt.split('?')[0]
-                if not os.path.exists(tgt): miss.append(h)
+                # 링크는 .html 없는 주소로 적는다 → 같은 이름의 .html 파일이나 폴더의 index.html 이 있으면 정상
+                if not (os.path.isfile(tgt) or os.path.isfile(tgt+'.html') or os.path.isfile(os.path.join(tgt,'index.html')) or (tgt in ('.','') and os.path.isfile('index.html'))): miss.append(h)
             if broken or ov or miss: problems.append((tag,path,broken,ov,miss))
             pg.screenshot(path=f'{SHOT}/{tag}_{path.replace("/","_")}.png', full_page=True)
         if errs: problems.append((tag,'JS',errs[:3]))

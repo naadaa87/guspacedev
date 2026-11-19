@@ -2,23 +2,27 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /admin/
+Disallow: /cdn-cgi/
 
 # 네이버 검색로봇
 User-agent: Yeti
 Allow: /
 Disallow: /api/
 Disallow: /admin/
+Disallow: /cdn-cgi/
 
 # 다음 검색로봇
 User-agent: Daum
 Allow: /
 Disallow: /api/
 Disallow: /admin/
+Disallow: /cdn-cgi/
 
 # 구글 검색로봇
 User-agent: Googlebot
 Allow: /
 Disallow: /api/
 Disallow: /admin/
+Disallow: /cdn-cgi/
 
 Sitemap: https://guspace.kr/sitemap.xml

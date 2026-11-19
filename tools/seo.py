@@ -222,3 +222,7 @@ for f in sorted(glob.glob('**/*.html', recursive=True)):
     open(f, 'w', encoding='utf-8').write(s)
     changed += 1
 print(f'구조화 데이터·메타 적용: {changed}개 페이지')
+
+# 링크·대표 주소·사이트맵의 .html 을 떼어 실제 열리는 주소와 맞춘다 (서치 콘솔 '리디렉션이 포함된 페이지' 방지)
+import os as _os, subprocess as _sp, sys as _sys
+_sp.run([_sys.executable, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'clean_urls.py'), _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), 'guspace.kr'], check=False)

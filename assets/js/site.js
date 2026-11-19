@@ -16,7 +16,7 @@
   fill('data-site-bizno', cfg.bizNo, false, '');
   if (cfg.phone) document.querySelectorAll('[data-site-tel]').forEach(function (a) { a.href = 'tel:' + cfg.phone.replace(/[^0-9+]/g, ''); a.hidden = false; });
   var mc = document.querySelector('[data-mobile-cta]');
-  if (mc && /contact\.html$/.test(location.pathname)) mc.hidden = true;
+  if (mc && /contact(\.html)?$/.test(location.pathname)) mc.hidden = true;
   if (cfg.mapNaver) document.querySelectorAll('[data-map-naver]').forEach(function (a) { a.href = cfg.mapNaver; });
   if (cfg.mapKakao) document.querySelectorAll('[data-map-kakao]').forEach(function (a) { a.href = cfg.mapKakao; });
 
