@@ -1,0 +1,10 @@
+# Cloudflare Pages 설정 (이 파일이 있으면 대시보드의 바인딩 화면 대신 이 파일이 기준이 됩니다)
+name = "guspacedev"
+pages_build_output_dir = "."
+compatibility_date = "2026-09-11"
+
+# 문의·회원·방문 통계 저장소 (2026-11-19 생성)
+[[d1_databases]]
+binding = "DB"
+database_name = "guspacedev-db"
+database_id = "f8c5afb3-87b7-46ef-987c-c910ae92df92"
